@@ -1,14 +1,37 @@
     <!--We call our boilerplate layout and pass the remaining content as body-->
     <% layout('layouts/boilerplate.ejs')%>
-    <h1>Campground Show!</h1>
-    <h2><%=campground.title%></h2>
-    <h2><%=campground.location%></h2>
-    <img src="<%=campground.image%>" alt="camp-image">
-    <p><%=campground.description%></p>
-    <p><a href="/campgrounds/<%=campground._id%>/edit">Edit</a></p>
-    <form action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
-        <button type="submit">Delete</button>
-    </form>
+
+    <!--Bootstrap 5 Card-->
+    <!-- We use grid system rather than inline styling as in documentation -->
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card mb-3">
+                <!--Adding campground image in card-->
+                <img src="<%=campground.image%>" class="card-img-top" alt="<%=campground.image%>">
+                <div class="card-body">
+                    <h5 class="card-title"><%=campground.title%></h5>
+                    <p class="card-text"><%=campground.description%></p>
+                </div>
+                <!-- We add the location and price in the card body text -->
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-secondary"><%= campground.location %></li>
+                    <li class="list-group-item">$<%=campground.price%>/night</li>
+                </ul>
+                <div class="card-body">
+                    <a href="/campgrounds/<%=campground._id%>/edit" class="card-link btn btn-info">Edit</a>
+                    <!--We convert form into inline so that it dosen't break the grid and pushes button down-->
+                    <form class="d-inline" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </div>
+                <!--Card footer for home-->
+                <div class="card-footer text-secondary">
+                    10 days ago
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <footer>
         <a href="/campgrounds">Home</a>
     </footer>
