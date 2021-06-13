@@ -1,10 +1,6 @@
     <!--We call our boilerplate layout and pass the remaining content as body-->
     <% layout('layouts/boilerplate.ejs')%>
     <h1>All Campgrounds</h1>
-    <div>
-        <a href="/campgrounds/new">New Campground</a>
-    </div>
-    <ul>
         <%for(let campground of campgrounds){%>
             <!-- Bootstrap card  -->
             <div class="card">
@@ -27,4 +23,3 @@
                 </div>
             </div>
         <% } %>
-    </ul>
