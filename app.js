@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
+const ejsMate = require('ejs-mate');
 
 //Developer created Model and dependencies
 const Campground = require('./models/campground.js');
@@ -25,6 +26,7 @@ db.then(() => {
 });
 
 //Setting up the view engine and it's directory
+app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
