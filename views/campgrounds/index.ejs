@@ -6,6 +6,25 @@
     </div>
     <ul>
         <%for(let campground of campgrounds){%>
-        
-            <% } %>
+            <!-- Bootstrap card  -->
+            <div class="card">
+                <div class="row">
+                    <!-- We are diving the card into col-4 and col-8 so each card will take entire horizontal space above md -->
+                    <div class="col-md-4">
+                        <img src="<%=campground.image%>" alt="<%=campground.image%>" class="img-fluid">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><%=campground.title%></h5>
+                            <p class="card-text"><%=campground.description%></p>
+                            <p class="card-text">
+                                <!-- Small is used to denote syntatically a element smaller than rest of text -->
+                                <small class="text-secondary"><%=campground.location%></small>
+                            </p>
+                            <a href="/campgrounds/<%=campground._id%>" class="btn btn-primary">View <%=campground.title%></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
     </ul>
