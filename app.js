@@ -30,9 +30,11 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-//All Express middleware 
+
+//All Express middleware/ Static files
 app.use(express.urlencoded({extended: true}));  //req.body is parsed as a form
 app.use(methodOverride('_method')); //Setting the query for method-override
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Setting up all routes (CRUD protocol)
 app.get('/', (req, res) => {
