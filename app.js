@@ -6,10 +6,11 @@ const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate'); //changing default engine to ejs-mate from ejs
 const ExpressError = require('./utilities/expressError'); //Error related dependencies user + module
 const catchAsync = require('./utilities/catchAsync');
-const { campgroundSchema } = require('./userMiddleware/joiErrorSchema'); //It is created with Joi which is then used to validate
+const { campgroundSchema, reviewSchema } = require('./userMiddleware/joiErrorSchema'); //It is created with Joi which is then used to validate
 
 //Developer created Model and dependencies
 const Campground = require('./models/campground.js');
+const Review = require('./models/review.js')
 
 //Connecting to mongoose and mongoDB
 const mongoose = require('mongoose');
@@ -44,7 +45,7 @@ app.use(express.urlencoded({
 app.use(methodOverride('_method')); //Setting the query for method-override
 app.use(express.static(path.join(__dirname, 'public')));
 
-//Defining our own mongoose error handling middleware
+//Defining our own express error handling middleware
 //Creating out Joi Schema 
 const validateCampground = (req, res, next) => {
     //Once schema is defined we validate it by using validate method on the schema and passing req.body 
@@ -52,6 +53,23 @@ const validateCampground = (req, res, next) => {
     const {
         error
     } = campgroundSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg, 400);
+    } else {
+        //Otherwise even if there isn't an error it won't be passed to the route
+        next();
+    }
+}
+
+//Defining our own express error handling middleware
+//Creating out Joi Schema 
+const validateReview = (req, res, next) => {
+    //Once schema is defined we validate it by using validate method on the schema and passing req.body 
+    // or whatever you want to validate in it
+    const {
+        error
+    } = reviewSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',');
         throw new ExpressError(msg, 400);
@@ -125,6 +143,20 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res, next) => {
     //Delete the following campground
     await Campground.findByIdAndDelete(req.params.id);
     res.redirect(`/campgrounds`);
+}));
+
+//Review Route after all camp Routes
+app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res, next) => {
+    //Fetch our campground from DB
+    const campground = await Campground.findById(req.params.id);
+    //Create review instance
+    const review = new Review(req.body.review);
+    //push it into campground
+    campground.reviews.push(review);
+    //save both of them
+    await review.save();
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`);
 }));
 
 //App route for all
