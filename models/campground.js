@@ -19,7 +19,11 @@ const campgroundSchema = new Schema({
     },
     location: {
         type: String
-    }
+    },
+    reviews: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Review'
+    }]
 });
 
 //Create the model using the Schema
