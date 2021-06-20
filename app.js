@@ -20,7 +20,8 @@ const {
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
 })
 //Create a db variable as we will be calling the connection multiple times
 const db = mongoose.connection;
@@ -110,7 +111,7 @@ app.get('/campgrounds/:id', catchAsync(async (req, res, next) => {
     const {
         id
     } = req.params;
-    const campground = await Campground.findById(id);
+    const campground = await Campground.findById(id).populate('reviews');
     res.render('campgrounds/show.ejs', {
         campground: campground
     });
@@ -145,7 +146,7 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res, next) => {
     res.redirect(`/campgrounds`);
 }));
 
-//Review Route after all camp Routes
+//Create Route for Review after all camp Routes
 app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res, next) => {
     //Fetch our campground from DB
     const campground = await Campground.findById(req.params.id);
@@ -158,6 +159,18 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res,
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
 }));
+
+//Delete Route for the Review
+app.delete('/campground/:id/reviews/:reviewId', catchAsync( async(req, res, next) => {
+    const {id, reviewId} = req.params;
+    //first find the Campground to update
+    //We use $pull operator which is a mongo operator which removes the matching instance
+    await Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
+    //find the review to delete
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/campgrounds/${id}`);
+}));
+
 
 //App route for all
 app.all('*', (req, res, next) => {

@@ -4,7 +4,7 @@
     <!--Bootstrap 5 Card-->
     <!-- We use grid system rather than inline styling as in documentation -->
     <div class="row">
-        <div class="col-6 offset-3">
+        <div class="col-6">
             <div class="card mb-3">
                 <!--Adding campground image in card-->
                 <img src="<%=campground.image%>" class="card-img-top" alt="<%=campground.image%>">
@@ -29,21 +29,36 @@
                     10 days ago
                 </div>
             </div>
+        </div>
+        <div class="col-6">
             <h2>Leave a Review:</h2>
-            <form action="/campgrounds/<%=campground._id%>/reviews" class="mb-3" method="POST">
+            <form action="/campgrounds/<%=campground._id%>/reviews" class="mb-3 validated-form" method="POST"
+                novalidate>
                 <div class="mb-3">
                     <label for="rating" class="form-label">Rating</label>
                     <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
                 </div>
                 <div class="mb-3">
                     <label for="body" class="form-label">Review</label>
-                    <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3"></textarea>
+                    <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
+                    <div class="valid-feedback">
+                        Thanks for the Review !
+                    </div>
                 </div>
                 <button class="btn btn-success">Submit</button>
             </form>
+            <!--Adding Review component-->
+            <% for(let review of campground.reviews) { %>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Rating: <%=review.rating%></h5>
+                    <p class="card-text">Review: <%=review.body%></p>
+                    <!-- review._id is coming from the review loop as object ID is saved in the reference -->
+                    <form action="/campground/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <% } %>
         </div>
     </div>
-
-    <footer>
-        <a href="/campgrounds">Home</a>
-    </footer>
