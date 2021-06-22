@@ -54,7 +54,8 @@
                     <h5 class="card-title">Rating: <%=review.rating%></h5>
                     <p class="card-text">Review: <%=review.body%></p>
                     <!-- review._id is coming from the review loop as object ID is saved in the reference -->
-                    <form action="/campground/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
+                    <form action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE"
+                        method="POST">
                         <button class="btn btn-sm btn-danger">Delete</button>
                     </form>
                 </div>
