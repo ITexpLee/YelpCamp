@@ -28,9 +28,13 @@ app.use(flash());
 //Express Middleware for all flash messages bounded to req for all routes 
 app.use((req, res, next) => {
     //if there is a success message attached to req
-    res.locals.success = req.flash('success');
+    // res.locals.success = req.flash('success');
     //if there is an error message attached to req
-    res.locals.error = req.flash('error');
+    // res.locals.error = req.flash('error');
+    res.locals.messages = {
+        'success': req.flash('success'),
+        'danger': req.flash('error')
+    }
     next();
 });
 
