@@ -47,9 +47,10 @@ router.get('/new', (req, res) => {
 
 //Create Route (Submitted) (end point)
 router.post('/', validateCampground, catchAsync(async (req, res, next) => {
-    const result = campgroundSchema.validate(req.body);
     const campground = new Campground(req.body.campground);
     await campground.save();
+    //Adding flash message to req
+    req.flash('success', 'Successfully made a new campground');
     res.redirect(`/campgrounds/${campground._id}`);
 }));
 
@@ -59,6 +60,12 @@ router.get('/:id', catchAsync(async (req, res, next) => {
         id
     } = req.params;
     const campground = await Campground.findById(id).populate('reviews');
+    //if campground was deleted or not found (url tampering)
+    if(!campground) {
+        //flash a message and redirect to the index page rather than individual campground
+        req.flash('error', 'Cannot find that campground!');
+        return res.redirect('/campgrounds');
+    }
     res.render('campgrounds/show.ejs', {
         campground: campground
     });
@@ -68,6 +75,12 @@ router.get('/:id', catchAsync(async (req, res, next) => {
 router.get('/:id/edit', catchAsync(async (req, res, next) => {
     //fetch data of campground to be edited
     const campground = await Campground.findById(req.params.id);
+    //if campground was deleted or not found (url tampering)
+    if(!campground) {
+        //flash a message and redirect to the index page rather than individual campground
+        req.flash('error', 'Cannot find that campground!');
+        return res.redirect('/campgrounds');
+    }
     res.render('campgrounds/edit.ejs', {
         campground: campground
     });
@@ -83,6 +96,8 @@ router.put('/:id', validateCampground, catchAsync(async (req, res, next) => {
         new: true,
         useFindAndModify: false
     });
+    // Flash message on updating campground
+    req.flash('success', 'Successfully updated campground!');
     res.redirect(`/campgrounds/${campground._id}`)
 }));
 
@@ -90,6 +105,7 @@ router.put('/:id', validateCampground, catchAsync(async (req, res, next) => {
 router.delete('/:id', catchAsync(async (req, res, next) => {
     //Delete the following campground
     await Campground.findByIdAndDelete(req.params.id);
+    req.flash('success', 'Successfully deleted campground!');
     res.redirect(`/campgrounds`);
 }));
 

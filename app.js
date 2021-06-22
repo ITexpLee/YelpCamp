@@ -6,6 +6,34 @@ const ejsMate = require('ejs-mate'); //changing default engine to ejs-mate from 
 const methodOverride = require('method-override');
 const ExpressError = require('./utilities/expressError'); //Error related dependencies user + module
 
+//Cookies, Session and flash package 
+const session = require('express-session');
+const flash = require('connect-flash');
+
+//Middleware related to cookies and session (Memory packages)
+//As session cookie is defined on the app.js it can be accessed through any route(global cookie) 
+const sessionConfig = {
+    secret: 'weshouldhaveabetterstorage',
+    resave: false, //If there is change in one session variable does it make any change in other (change in onetab no change in other)
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        //1000 milliseconds in a sec * 60 sec in a min * 60 mins in an hour * 24 hours in a day * 7 days a week
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+app.use(session(sessionConfig));
+app.use(flash());
+//Express Middleware for all flash messages bounded to req for all routes 
+app.use((req, res, next) => {
+    //if there is a success message attached to req
+    res.locals.success = req.flash('success');
+    //if there is an error message attached to req
+    res.locals.error = req.flash('error');
+    next();
+});
+
 //Our Route files go here
 const campgrounds = require('./routes/campgrounds.js');
 const reviews = require('./routes/reviews.js');
@@ -35,7 +63,6 @@ db.then(() => {
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
 
 //All Express middleware/ Static files
 app.use(express.urlencoded({

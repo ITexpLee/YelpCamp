@@ -17,6 +17,9 @@
     <%-include('../partials/navbar.ejs')%>
     <!-- Main Container or body part rendered from page using ejs-mate -->
     <main class="container mt-5">
+        <!-- rendering flash message -->
+        <%-include('../partials/flash.ejs')%>
+        <!-- All content coming from other view templates is rendered as body -->
         <%- body %>
     </main>
     <!--Footer file-->
