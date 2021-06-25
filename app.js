@@ -5,10 +5,13 @@ const path = require('path');
 const ejsMate = require('ejs-mate'); //changing default engine to ejs-mate from ejs
 const methodOverride = require('method-override');
 const ExpressError = require('./utilities/expressError'); //Error related dependencies user + module
+const User = require('./models/user.js'); //requiring passport model
 
-//Cookies, Session and flash package 
+//Cookies, Session, passport and flash package (All Register/Signup stuff)
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport'); //requiring passport for easier authentication
+const LocalStratergy = require('passport-local'); //passport stratergy for local signup and login
 
 //Middleware related to cookies and session (Memory packages)
 //As session cookie is defined on the app.js it can be accessed through any route(global cookie) 
@@ -37,6 +40,15 @@ app.use((req, res, next) => {
     }
     next();
 });
+//passport middlewares for initializing and creating consistent session for all request
+app.use(passport.initialize());
+app.use(passport.session());
+//defining the strategy we want to use in order to authenticate
+passport.use(new LocalStratergy(User.authenticate));
+
+//These two plugins are added no matter which strategy used
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 //Our Route files go here
 const campgrounds = require('./routes/campgrounds.js');
