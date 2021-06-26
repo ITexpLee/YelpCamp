@@ -5,14 +5,22 @@
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="navbar-nav">
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
                 <!--Homepage Route-->
                 <a class="nav-link active" aria-current="page" href="/">Home</a>
                 <!--Index Route-->
                 <a class="nav-link" href="/campgrounds">Campgrounds</a>
                 <!-- Create Route  -->
                 <a class="nav-link" href="/campgrounds/new">New Campground</a>
+            </div>
+            <div class="navbar-nav ms-auto">
+                <% if(!currentUser) {%>
+                <a href="/login" class="nav-link">Login</a>
+                <a href="/register" class="nav-link">Register</a>
+                <% } else { %>
+                <a href="/logout" class="nav-link">Logout</a>
+                <% } %>
             </div>
         </div>
     </div>

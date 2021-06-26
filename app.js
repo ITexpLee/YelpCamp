@@ -37,22 +37,30 @@ app.use((req, res, next) => {
     res.locals.messages = {
         'success': req.flash('success'),
         'danger': req.flash('error')
-    }
+    };
     next();
 });
 //passport middlewares for initializing and creating consistent session for all request
 app.use(passport.initialize());
 app.use(passport.session());
 //defining the strategy we want to use in order to authenticate
-passport.use(new LocalStratergy(User.authenticate));
+passport.use(new LocalStratergy(User.authenticate()));
 
 //These two plugins are added no matter which strategy used
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//Middleware for sending user info created by passport 
+app.use((req, res, next) => {
+    //We can also use res.locals to store other info(User info from passport)
+    res.locals.currentUser = req.user;
+    next();
+});
+
 //Our Route files go here
-const campgrounds = require('./routes/campgrounds.js');
-const reviews = require('./routes/reviews.js');
+const registerRoutes = require('./routes/users.js');
+const campgroundRoutes = require('./routes/campgrounds.js');
+const reviewRoutes = require('./routes/reviews.js');
 
 //Connecting to mongoose and mongoDB
 const mongoose = require('mongoose');
@@ -92,11 +100,14 @@ app.get('/', (req, res) => {
     res.render('home.ejs');
 });
 
+//Register/Login Routes go here
+app.use('/', registerRoutes);
+
 //Campground Routes go here
-app.use('/campgrounds', campgrounds);
+app.use('/campgrounds', campgroundRoutes);
 
 //Review Routes go here
-app.use('/campgrounds/:id/reviews', reviews);
+app.use('/campgrounds/:id/reviews', reviewRoutes);
 
 //App route for all
 app.all('*', (req, res, next) => {

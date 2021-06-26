@@ -12,6 +12,7 @@ const Campground = require('../models/campground.js');
 
 //campgroundSchema for Joi validation
 const {campgroundSchema} = require('../userMiddleware/joiErrorSchema');
+const {isLoggedIn} = require('../userMiddleware/isAuthenticated.js'); //Middleware to authenticate is logged in
 
 //Defining our own express error handling middleware
 //Creating out Joi Schema 
@@ -41,12 +42,12 @@ router.get('/', catchAsync(async (req, res, next) => {
 }));
 
 //Create Route (form page)
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     res.render('campgrounds/new.ejs');
 });
 
 //Create Route (Submitted) (end point)
-router.post('/', validateCampground, catchAsync(async (req, res, next) => {
+router.post('/', isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
     //Adding flash message to req
@@ -72,7 +73,7 @@ router.get('/:id', catchAsync(async (req, res, next) => {
 }));
 
 //Edit/Update Route (form Page)
-router.get('/:id/edit', catchAsync(async (req, res, next) => {
+router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res, next) => {
     //fetch data of campground to be edited
     const campground = await Campground.findById(req.params.id);
     //if campground was deleted or not found (url tampering)
@@ -87,7 +88,7 @@ router.get('/:id/edit', catchAsync(async (req, res, next) => {
 }));
 
 //Update Route (Patch/Put request)
-router.put('/:id', validateCampground, catchAsync(async (req, res, next) => {
+router.put('/:id', isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
     //Update the following campground
     //Here we get id from first and the second returns us the value of campground object
     const campground = await Campground.findByIdAndUpdate(req.params.id, {
