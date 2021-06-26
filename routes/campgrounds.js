@@ -60,7 +60,7 @@ router.get('/:id', catchAsync(async (req, res, next) => {
     const {
         id
     } = req.params;
-    const campground = await Campground.findById(id).populate('reviews');
+    const campground = await Campground.findById(id).populate('reviews').populate('author');
     //if campground was deleted or not found (url tampering)
     if(!campground) {
         //flash a message and redirect to the index page rather than individual campground

@@ -15,6 +15,7 @@
                 <!-- We add the location and price in the card body text -->
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item text-secondary"><%= campground.location %></li>
+                    <li class="list-group-item text-secondary">Submitted by <%= campground.author.username %></li>
                     <li class="list-group-item">$<%=campground.price%>/night</li>
                 </ul>
                 <div class="card-body">
