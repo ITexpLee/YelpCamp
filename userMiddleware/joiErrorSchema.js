@@ -13,13 +13,6 @@ const campgroundSchema = Joi.object({
     }).required()
 });
 
-module.exports.reviewSchema = Joi.object({
-    review: Joi.object({
-        rating: Joi.number().required().min(1).max(5),
-        body: Joi.string().required()
-    }).required()
-});
-
 //Defining our own express error handling middleware with the help of Joi Schema 
 module.exports.validateCampground = (req, res, next) => {
     //Once schema is defined we validate it by using validate method on the schema and passing req.body 
@@ -27,6 +20,32 @@ module.exports.validateCampground = (req, res, next) => {
     const {
         error
     } = campgroundSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg, 400);
+    } else {
+        //Otherwise even if there isn't an error it won't be passed to the route
+        next();
+    }
+}
+
+//Joi Schema for validateReview middleware
+//We were specifically sending module.exports.reviewSchema so that we can send multiple schema with other names too
+const reviewSchema = Joi.object({
+    review: Joi.object({
+        rating: Joi.number().required().min(1).max(5),
+        body: Joi.string().required()
+    }).required()
+});
+
+//Defining our own express error handling middleware
+//Creating out Joi Schema 
+module.exports.validateReview = (req, res, next) => {
+    //Once schema is defined we validate it by using validate method on the schema and passing req.body 
+    // or whatever you want to validate in it
+    const {
+        error
+    } = reviewSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',');
         throw new ExpressError(msg, 400);

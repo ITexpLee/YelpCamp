@@ -34,6 +34,7 @@
             </div>
         </div>
         <div class="col-6">
+            <% if(currentUser) { %>
             <h2>Leave a Review:</h2>
             <form action="/campgrounds/<%=campground._id%>/reviews" class="mb-3 validated-form" method="POST"
                 novalidate>
@@ -50,17 +51,23 @@
                 </div>
                 <button class="btn btn-success">Submit</button>
             </form>
+            <% } %>
             <!--Adding Review component-->
             <% for(let review of campground.reviews) { %>
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Rating: <%=review.rating%></h5>
+                    <h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username %></h6>
                     <p class="card-text">Review: <%=review.body%></p>
                     <!-- review._id is coming from the review loop as object ID is saved in the reference -->
+                    <!-- The review author is user reference stored on each review while currentUser_id is passed -->
+                    <!-- by res.locals and is referencing to req.user object given by passport -->
+                    <% if(currentUser && review.author.equals(currentUser._id)) {%>
                     <form action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE"
                         method="POST">
                         <button class="btn btn-sm btn-danger">Delete</button>
                     </form>
+                    <% } %>
                 </div>
             </div>
             <% } %>
