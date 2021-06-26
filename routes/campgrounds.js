@@ -6,6 +6,9 @@ const catchAsync = require('../utilities/catchAsync.js'); //The error wrapper or
 //Add express router in here
 const router = express.Router({mergeParams: true});
 
+// Campground controller modules (Here campgrounds is the main object with all routes as properties)
+const campgrounds = require('../controllers/campgrounds.js');
+
 //Model related to the Route
 const Campground = require('../models/campground.js');
 
@@ -17,88 +20,25 @@ const { isLoggedIn, isAuthor } = require('../userMiddleware/isAuthenticated.js')
 
 //All the campground routes
 //Index Route (Where all campgrounds are shown)
-router.get('/', catchAsync(async (req, res, next) => {
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index.ejs', {
-        campgrounds: campgrounds
-    });
-}));
+router.get('/', catchAsync( campgrounds.index ));
 
 //Create Route (form page)
-router.get('/new', isLoggedIn, (req, res) => {
-    res.render('campgrounds/new.ejs');
-});
+router.get('/new', isLoggedIn, campgrounds.renderNewForm );
 
 //Create Route (Submitted) (end point)
-router.post('/', isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
-    //fetch all campground information and create an instance
-    const campground = new Campground(req.body.campground);
-    //add author or user to the instace
-    campground.author = req.user._id
-    await campground.save();
-    //Adding flash message to req
-    req.flash('success', 'Successfully made a new campground');
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
+router.post('/', isLoggedIn, validateCampground, catchAsync( campgrounds.createCampground ));
 
 //Show Route (Where we will show detailed information of specific campground)
-router.get('/:id', catchAsync(async (req, res, next) => {
-    const {
-        id
-    } = req.params;
-    const campground = await Campground.findById(id).populate({
-      path: 'reviews',
-      populate: {
-          path: 'author'
-      }  
-    }).populate('author');
-    //if campground was deleted or not found (url tampering)
-    if(!campground) {
-        //flash a message and redirect to the index page rather than individual campground
-        req.flash('error', 'Cannot find that campground!');
-        return res.redirect('/campgrounds');
-    }
-    res.render('campgrounds/show.ejs', {
-        campground: campground
-    });
-}));
+router.get('/:id', catchAsync( campgrounds.showCampground ));
 
 //Edit/Update Route (form Page)
-router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(async (req, res, next) => {
-    const campground = await Campground.findById(req.params.id);
-    //if campground was deleted or not found (url tampering)
-    if(!campground) {
-        //flash a message and redirect to the index page rather than individual campground
-        req.flash('error', 'Cannot find that campground!');
-        return res.redirect('/campgrounds');
-    }
-    res.render('campgrounds/edit.ejs', {
-        campground: campground
-    });
-}));
+router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync( campgrounds.renderEditForm ));
 
 //Update Route (Patch/Put request)
-router.put('/:id', isLoggedIn, isAuthor, validateCampground, catchAsync(async (req, res, next) => {
-    //Update the following campground
-    //Here we get id from first and the second returns us the value of campground object
-    const campground = await Campground.findByIdAndUpdate(req.params.id, {
-        ...req.body.campground
-    }, {
-        new: true,
-        useFindAndModify: false
-    });
-    // Flash message on updating campground
-    req.flash('success', 'Successfully updated campground!');
-    res.redirect(`/campgrounds/${campground._id}`)
-}));
+router.put('/:id', isLoggedIn, isAuthor, validateCampground, catchAsync( campgrounds.updateCampground ));
 
 //Delete Route
-router.delete('/:id', isAuthor, catchAsync(async (req, res, next) => {
-    //Delete the following campground
-    await Campground.findByIdAndDelete(req.params.id);
-    req.flash('success', 'Successfully deleted campground!');
-    res.redirect(`/campgrounds`);
-}));
+router.delete('/:id', isAuthor, catchAsync( campgrounds.deleteCampground ));
 
 //Exporting the campground route file to app.js
 module.exports = router;
