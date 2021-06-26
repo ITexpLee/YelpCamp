@@ -15,9 +15,10 @@
                 <!-- We add the location and price in the card body text -->
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item text-secondary"><%= campground.location %></li>
-                    <li class="list-group-item text-secondary">Submitted by <%= campground.author.username %></li>
+                    <li class="list-group-item">Submitted by <%= campground.author.username %></li>
                     <li class="list-group-item">$<%=campground.price%>/night</li>
                 </ul>
+                <% if(currentUser && campground.author.equals(currentUser._id)) {%>
                 <div class="card-body">
                     <a href="/campgrounds/<%=campground._id%>/edit" class="card-link btn btn-info">Edit</a>
                     <!--We convert form into inline so that it dosen't break the grid and pushes button down-->
@@ -25,6 +26,7 @@
                         <button class="btn btn-danger" type="submit">Delete</button>
                     </form>
                 </div>
+                <% } %>
                 <!--Card footer for home-->
                 <div class="card-footer text-secondary">
                     10 days ago

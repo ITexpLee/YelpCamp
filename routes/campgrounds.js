@@ -2,7 +2,6 @@
 const express = require('express');
 const app = express();
 const catchAsync = require('../utilities/catchAsync.js'); //The error wrapper or async wrapper
-const ExpressError = require('../utilities/expressError.js'); //Error related dependencies user + module
 
 //Add express router in here
 const router = express.Router({mergeParams: true});
@@ -10,27 +9,11 @@ const router = express.Router({mergeParams: true});
 //Model related to the Route
 const Campground = require('../models/campground.js');
 
-//campgroundSchema for Joi validation
-const {campgroundSchema} = require('../userMiddleware/joiErrorSchema');
-const {isLoggedIn} = require('../userMiddleware/isAuthenticated.js'); //Middleware to authenticate is logged in
-
 //Defining our own express error handling middleware
-//Creating out Joi Schema 
-const validateCampground = (req, res, next) => {
-    //Once schema is defined we validate it by using validate method on the schema and passing req.body 
-    // or whatever you want to validate in it
-    const {
-        error
-    } = campgroundSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',');
-        throw new ExpressError(msg, 400);
-    } else {
-        //Otherwise even if there isn't an error it won't be passed to the route
-        next();
-    }
-}
-
+const { validateCampground } = require('../userMiddleware/joiErrorSchema.js');
+ //To check if the author of campground is same as user logged in
+ //Middleware to authenticate is logged in
+const { isLoggedIn, isAuthor } = require('../userMiddleware/isAuthenticated.js'); 
 
 //All the campground routes
 //Index Route (Where all campgrounds are shown)
@@ -48,7 +31,10 @@ router.get('/new', isLoggedIn, (req, res) => {
 
 //Create Route (Submitted) (end point)
 router.post('/', isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
+    //fetch all campground information and create an instance
     const campground = new Campground(req.body.campground);
+    //add author or user to the instace
+    campground.author = req.user._id
     await campground.save();
     //Adding flash message to req
     req.flash('success', 'Successfully made a new campground');
@@ -73,8 +59,7 @@ router.get('/:id', catchAsync(async (req, res, next) => {
 }));
 
 //Edit/Update Route (form Page)
-router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res, next) => {
-    //fetch data of campground to be edited
+router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(async (req, res, next) => {
     const campground = await Campground.findById(req.params.id);
     //if campground was deleted or not found (url tampering)
     if(!campground) {
@@ -88,7 +73,7 @@ router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res, next) => {
 }));
 
 //Update Route (Patch/Put request)
-router.put('/:id', isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
+router.put('/:id', isLoggedIn, isAuthor, validateCampground, catchAsync(async (req, res, next) => {
     //Update the following campground
     //Here we get id from first and the second returns us the value of campground object
     const campground = await Campground.findByIdAndUpdate(req.params.id, {
@@ -103,7 +88,7 @@ router.put('/:id', isLoggedIn, validateCampground, catchAsync(async (req, res, n
 }));
 
 //Delete Route
-router.delete('/:id', catchAsync(async (req, res, next) => {
+router.delete('/:id', isAuthor, catchAsync(async (req, res, next) => {
     //Delete the following campground
     await Campground.findByIdAndDelete(req.params.id);
     req.flash('success', 'Successfully deleted campground!');
