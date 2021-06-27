@@ -6,7 +6,7 @@
         <div class="col-6 offset-3">
             <!--All the data in form is passed as an object which is an array called campground-->
             <!--Validated form class is selected by Bootstrap 5 JavaScript code by query selector for validation-->
-            <form action="/campgrounds" method="POST" class="validated-form" novalidate>
+            <form action="/campgrounds" method="POST" class="validated-form" enctype="multipart/form-data" novalidate>
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
                     <input type="text" class="form-control" id="title" name="campground[title]" required>
@@ -21,13 +21,14 @@
                         looks good!
                     </div>
                 </div>
-                <div class="mb-3">
+                <input type="file" name="image" id="" multiple>
+                <!-- <div class="mb-3">
                     <label for="image" class="form-label">Image Url</label>
                     <input type="text" class="form-control" id="image" name="campground[image]" required>
                     <div class="valid-feedback">
                         looks good!
                     </div>
-                </div>
+                </div> -->
                 <div class="mb-3">
                     <label for="price" class="form-label">Campground Price</label>
                     <div class="input-group">
