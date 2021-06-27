@@ -6,11 +6,7 @@ const catchAsync = require('../utilities/catchAsync.js'); //The error wrapper or
 //Add express router in here
 const router = express.Router({mergeParams: true});
 
-//Developer created Model and dependencies required by route file
-const Campground = require('../models/campground.js');
-const Review = require('../models/review.js');
-
-// Review controller modules (Here campgrounds is the main object with all routes as properties)
+// Review controller modules (Here reviews is the main object with all routes as properties)
 const reviews = require('../controllers/reviews.js');
 
 //reviewSchema for Joi validation
