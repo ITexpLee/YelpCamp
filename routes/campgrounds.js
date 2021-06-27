@@ -20,25 +20,24 @@ const { isLoggedIn, isAuthor } = require('../userMiddleware/isAuthenticated.js')
 
 //All the campground routes
 //Index Route (Where all campgrounds are shown)
-router.get('/', catchAsync( campgrounds.index ));
+//Create Route (Submitted) (end point)
+router.route('/')
+    .get(catchAsync( campgrounds.index ))
+    .post(isLoggedIn, validateCampground, catchAsync( campgrounds.createCampground ));
 
 //Create Route (form page)
 router.get('/new', isLoggedIn, campgrounds.renderNewForm );
 
-//Create Route (Submitted) (end point)
-router.post('/', isLoggedIn, validateCampground, catchAsync( campgrounds.createCampground ));
-
 //Show Route (Where we will show detailed information of specific campground)
-router.get('/:id', catchAsync( campgrounds.showCampground ));
+//Update Route (Patch/Put request)
+//Delete Route
+router.route('/:id')
+.get(catchAsync( campgrounds.showCampground ))
+.put(isLoggedIn, isAuthor, validateCampground, catchAsync( campgrounds.updateCampground ))
+.delete(isAuthor, catchAsync( campgrounds.deleteCampground ))
 
 //Edit/Update Route (form Page)
 router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync( campgrounds.renderEditForm ));
-
-//Update Route (Patch/Put request)
-router.put('/:id', isLoggedIn, isAuthor, validateCampground, catchAsync( campgrounds.updateCampground ));
-
-//Delete Route
-router.delete('/:id', isAuthor, catchAsync( campgrounds.deleteCampground ));
 
 //Exporting the campground route file to app.js
 module.exports = router;
