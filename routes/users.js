@@ -23,7 +23,7 @@ router.route('/register')
 
 //login Route (Start)
 //login Route (End)
-router.route('/')
+router.route('/login')
 .get( users.renderLogin )
 .post(passport.authenticate('local', {
     failureFlash: true,

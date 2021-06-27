@@ -1,5 +1,7 @@
     <!--We call our boilerplate layout and pass the remaining content as body-->
     <% layout('layouts/boilerplate.ejs')%>
+    <!-- Adding stylesheet for Stars -->
+    <link rel="stylesheet" href="/css/stars.css">
 
     <!--Bootstrap 5 Card-->
     <!-- We use grid system rather than inline styling as in documentation -->
@@ -33,17 +35,31 @@
                 </div>
             </div>
         </div>
+        <!--Review Section of Page-->
         <div class="col-6">
             <% if(currentUser) { %>
             <h2>Leave a Review:</h2>
             <form action="/campgrounds/<%=campground._id%>/reviews" class="mb-3 validated-form" method="POST"
                 novalidate>
+                <!--Star Rating Slider (Fade Variant)-->
                 <div class="mb-3">
-                    <label for="rating" class="form-label">Rating</label>
-                    <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
+                    <fieldset class="starability-fade">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
+                            aria-label="No rating." required />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                    </fieldset>
                 </div>
                 <div class="mb-3">
-                    <label for="body" class="form-label">Review</label>
+                    <label for="body" class="form-label">Review Text</label>
                     <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
                     <div class="valid-feedback">
                         Thanks for the Review !
@@ -56,8 +72,10 @@
             <% for(let review of campground.reviews) { %>
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Rating: <%=review.rating%></h5>
-                    <h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username %></h6>
+                    <h5 class="card-title starability-result" data-rating="<%=review.rating%>">
+                        Rated: <%=review.rating%> stars
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-dark">By <%= review.author.username %></h6>
                     <p class="card-text">Review: <%=review.body%></p>
                     <!-- review._id is coming from the review loop as object ID is saved in the reference -->
                     <!-- The review author is user reference stored on each review while currentUser_id is passed -->
