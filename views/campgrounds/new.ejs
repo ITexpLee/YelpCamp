@@ -21,14 +21,6 @@
                         looks good!
                     </div>
                 </div>
-                <input type="file" name="image" id="" multiple>
-                <!-- <div class="mb-3">
-                    <label for="image" class="form-label">Image Url</label>
-                    <input type="text" class="form-control" id="image" name="campground[image]" required>
-                    <div class="valid-feedback">
-                        looks good!
-                    </div>
-                </div> -->
                 <div class="mb-3">
                     <label for="price" class="form-label">Campground Price</label>
                     <div class="input-group">
@@ -47,12 +39,15 @@
                         looks good!
                     </div>
                 </div>
+                <!--This part of form isn't passed with other inputs-->
+                <!--It is passed to upload middleware of multer and added to req.files-->
+                <div class="mb-3">
+                    <label for="image" class="form-label"></label>
+                    <input class="form-control" type="file" name="image" id="imageSelector" multiple required>
+                </div>
                 <div class="mb-3">
                     <button class="btn btn-success" type="submit">Add Campground</button>
                 </div>
             </form>
-            <footer>
-                <a href="/campgrounds">Home</a>
-            </footer>
         </div>
     </div>

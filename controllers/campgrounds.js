@@ -24,7 +24,6 @@ module.exports.createCampground = async (req, res, next) => {
     //Append mapped files which are in perfect format to campground modelimages
     //As campground.images is an array it will hold all mapped files at indexes
     campground.images = req.files.map(file => ({url: file.path, filename: file.filename}));
-    console.log(campground);
     //add author or user to the instace
     campground.author = req.user._id
     await campground.save();
@@ -79,6 +78,12 @@ module.exports.updateCampground = async (req, res, next) => {
         new: true,
         useFindAndModify: false
     });
+    //fetch campground images added from multer upload and push them along with the previous images
+    //The whole req.files... code returns us an Array but we have defined in our Schema it's an array with object having strings
+    //This is why what we do is we spread the array so when it's pushed it's multiple object with comma sperator thus different elements
+    campground.images.push(...req.files.map(file => ({url: file.path, filename: file.filename})));
+    //Save the changes made to images
+    await campground.save();
     // Flash message on updating campground
     req.flash('success', 'Successfully updated campground!');
     res.redirect(`/campgrounds/${campground._id}`)

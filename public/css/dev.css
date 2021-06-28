@@ -1,0 +1,8 @@
+#imageSelector::before {
+    content: "Pick Images";
+    position: absolute;
+    z-index: 2;
+    display: block;
+    background-color: #eee;
+    width: 90px;
+}

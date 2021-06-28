@@ -39,7 +39,7 @@ router.get('/new', isLoggedIn, campgrounds.renderNewForm );
 //Delete Route
 router.route('/:id')
 .get(catchAsync( campgrounds.showCampground ))
-.put(isLoggedIn, isAuthor, validateCampground, catchAsync( campgrounds.updateCampground ))
+.put(isLoggedIn, isAuthor, upload.array('image'), validateCampground, catchAsync( campgrounds.updateCampground ))
 .delete(isAuthor, catchAsync( campgrounds.deleteCampground ))
 
 //Edit/Update Route (form Page)
