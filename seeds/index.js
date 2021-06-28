@@ -42,7 +42,20 @@ const seedDB = async () => {
             author: '60d6e2a874fd5e3a90fc14a1',
             location: `${cities[rand].city}, ${cities[rand].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
-            image: `https://source.unsplash.com/collection/483251`,
+            images: [
+                {
+                  url: 'https://res.cloudinary.com/manali-camp/image/upload/v1624878968/YelpCamp/rvgiljskv7wononlew3k.jpg',
+                  filename: 'YelpCamp/rvgiljskv7wononlew3k'
+                },
+                {
+                  url: 'https://res.cloudinary.com/manali-camp/image/upload/v1624878968/YelpCamp/tyjx4rgukatwl6qgkams.jpg',
+                  filename: 'YelpCamp/tyjx4rgukatwl6qgkams'
+                },
+                {
+                  url: 'https://res.cloudinary.com/manali-camp/image/upload/v1624878969/YelpCamp/rptrzulyms57nc3jqx2v.jpg',
+                  filename: 'YelpCamp/rptrzulyms57nc3jqx2v'
+                }
+              ],
             description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis, animi. Optio tenetur iste, excepturi repellat, autem eum voluptate nisi fuga atque blanditiis`,
             price: price,
         })
@@ -51,3 +64,18 @@ const seedDB = async () => {
 }
 
 seedDB().then(() => db.close()); //mongoose.connection.close()
+
+// images: [
+//     {
+//       url: 'https://res.cloudinary.com/manali-camp/image/upload/v1624878968/YelpCamp/rvgiljskv7wononlew3k.jpg',
+//       filename: 'YelpCamp/rvgiljskv7wononlew3k'
+//     },
+//     {
+//       url: 'https://res.cloudinary.com/manali-camp/image/upload/v1624878968/YelpCamp/tyjx4rgukatwl6qgkams.jpg',
+//       filename: 'YelpCamp/tyjx4rgukatwl6qgkams'
+//     },
+//     {
+//       url: 'https://res.cloudinary.com/manali-camp/image/upload/v1624878969/YelpCamp/rptrzulyms57nc3jqx2v.jpg',
+//       filename: 'YelpCamp/rptrzulyms57nc3jqx2v'
+//     }
+//   ]
