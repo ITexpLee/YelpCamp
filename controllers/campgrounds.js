@@ -1,4 +1,5 @@
 //Model related to the Route
+const { cloudinary } = require('../cloudinary/index.js');
 const Campground = require('../models/campground.js');
 
 //Logic of ROUTES of campground
@@ -84,6 +85,17 @@ module.exports.updateCampground = async (req, res, next) => {
     campground.images.push(...req.files.map(file => ({url: file.path, filename: file.filename})));
     //Save the changes made to images
     await campground.save();
+    //Now check if there are images to delete
+    //If there exists deleteImages array
+    if(req.body.deleteImages) {
+        //Remove or destroy image from cloudinary
+        for(let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        //Remove or pull it out of the campground
+        await campground.updateOne({ $pull: { images: {filename : { $in: req.body.deleteImages}}}});
+        console.log(campground);
+    }
     // Flash message on updating campground
     req.flash('success', 'Successfully updated campground!');
     res.redirect(`/campgrounds/${campground._id}`)

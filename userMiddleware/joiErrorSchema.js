@@ -10,7 +10,9 @@ const campgroundSchema = Joi.object({
         // image: Joi.string().required(),
         location: Joi.string().required(),
         description: Joi.string().required()
-    }).required()
+    }).required(),
+    //It is not required as it won't be passed everytime we submit only on edit (where also it can be empty)
+    deleteImages: Joi.array()
 });
 
 //Defining our own express error handling middleware with the help of Joi Schema 

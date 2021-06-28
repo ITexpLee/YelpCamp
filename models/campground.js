@@ -5,17 +5,23 @@ const Schema = mongoose.Schema;
 //Require review model in order to delete
 const Review = require('./review.js');
 
+//Creating our own image Schema
+const ImageSchema = new Schema ({
+        url: String,
+        filename: String
+});
+
+//Creating virtual on image Schema
+ImageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_200,h_200');
+});
+
 //Creating our Campground Model
 const campgroundSchema = new Schema({
     title: {
         type: String
     },
-    images: [
-        {
-            url: String,
-            filename: String
-        }
-    ],
+    images: [ImageSchema],
     price: {
         type: Number
     },
