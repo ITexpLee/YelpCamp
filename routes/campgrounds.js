@@ -12,9 +12,10 @@ const campgrounds = require('../controllers/campgrounds.js');
 //Model related to the Route
 const Campground = require('../models/campground.js');
 
-//Multer node.js middleware to parse form with file upload 
+//Multer node.js middleware to parse form with file upload + multer_cloudinary for image upload
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const { storage } = require('../cloudinary/index.js'); //Node automatically looks for index.js even if not mentioned
+const upload = multer({ storage });
 
 //Defining our own express error handling middleware
 const { validateCampground } = require('../userMiddleware/joiErrorSchema.js');
@@ -25,12 +26,11 @@ const { isLoggedIn, isAuthor } = require('../userMiddleware/isAuthenticated.js')
 //All the campground routes
 //Index Route (Where all campgrounds are shown)
 //Create Route (Submitted) (end point)
+//Here upload is the middleware of multer which specifies the input name for file you want to upload and Number of items to upload
 router.route('/')
     .get(catchAsync( campgrounds.index ))
-    // .post(isLoggedIn, validateCampground, catchAsync( campgrounds.createCampground ));
-    .post(upload.array('image'), (req, res) => {
-        console.log(req.body, req.files);
-    })
+    .post(isLoggedIn, upload.array('image'), validateCampground, catchAsync( campgrounds.createCampground ));
+
 //Create Route (form page)
 router.get('/new', isLoggedIn, campgrounds.renderNewForm );
 

@@ -2,7 +2,6 @@
 if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
-console.log(process.env.SECRET);
 //Require all the important dependencies at the top
 const express = require('express');
 const app = express();

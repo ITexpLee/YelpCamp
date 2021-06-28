@@ -20,6 +20,11 @@ module.exports.renderNewForm = (req, res) => {
 module.exports.createCampground = async (req, res, next) => {
     //fetch all campground information and create an instance
     const campground = new Campground(req.body.campground);
+    //Use req.files from multer and map over each file and return an object at each index with filename and url
+    //Append mapped files which are in perfect format to campground modelimages
+    //As campground.images is an array it will hold all mapped files at indexes
+    campground.images = req.files.map(file => ({url: file.path, filename: file.filename}));
+    console.log(campground);
     //add author or user to the instace
     campground.author = req.user._id
     await campground.save();
