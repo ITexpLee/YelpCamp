@@ -1,9 +1,17 @@
-//Model related to the Route
+//Clodinary SDK required
 const { cloudinary } = require('../cloudinary/index.js');
+
+//Mapbox SDK (Gercoding forward)
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+//Mapbox token and Configuring MapBox
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geoCoder = mbxGeocoding({ accessToken: mapBoxToken });
+
+
+//Model related to the Route
 const Campground = require('../models/campground.js');
 
 //Logic of ROUTES of campground
-
 //index route of campground
 module.exports.index = async (req, res, next) => {
     const campgrounds = await Campground.find({});
@@ -19,14 +27,22 @@ module.exports.renderNewForm = (req, res) => {
 
 //create route of campground
 module.exports.createCampground = async (req, res, next) => {
+    //Geocoding using Mapbox
+    const geoData = await geoCoder.forwardGeocode({
+        query: req.body.campground.location,
+        limit: 1
+    }).send();
     //fetch all campground information and create an instance
     const campground = new Campground(req.body.campground);
+    //Mapbox location add it here
+    campground.geometry = geoData.body.features[0].geometry;
     //Use req.files from multer and map over each file and return an object at each index with filename and url
     //Append mapped files which are in perfect format to campground modelimages
     //As campground.images is an array it will hold all mapped files at indexes
     campground.images = req.files.map(file => ({url: file.path, filename: file.filename}));
     //add author or user to the instace
     campground.author = req.user._id
+    console.log(campground);
     await campground.save();
     //Adding flash message to req
     req.flash('success', 'Successfully made a new campground');

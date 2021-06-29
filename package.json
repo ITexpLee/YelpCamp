@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Anunay-Anand/YelpCamp#readme",
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.13.0",
     "cloudinary": "^1.26.1",
     "connect-flash": "^0.1.1",
     "dotenv": "^10.0.0",
