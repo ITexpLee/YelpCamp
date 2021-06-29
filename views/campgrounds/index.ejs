@@ -7,7 +7,12 @@
         <div class="row">
             <!-- We are diving the card into col-4 and col-8 so each card will take entire horizontal space above md -->
             <div class="col-md-4">
+                <% if(campground.images.length) { %>
                 <img src="<%=campground.images[0].url%>" alt="<%=campground.images[0].url%>" class="img-fluid">
+                <% } else { %>
+                <img src="https://res.cloudinary.com/manali-camp/image/upload/v1624985025/YelpCamp/dop78f6os8myyevryoxb.jpg"
+                    alt="" class="img-fluid">
+                <% } %>
             </div>
             <div class="col-md-8">
                 <div class="card-body">

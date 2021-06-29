@@ -3,7 +3,7 @@
     <!-- Adding stylesheet for Stars -->
     <link rel="stylesheet" href="/css/stars.css">
 
-
+    <!--Show page Route-->
     <div class="row">
         <div class="col-6">
             <!-- Bootstrap Carousel for campground image display -->
@@ -61,6 +61,8 @@
         </div>
         <!--Review Section of Page-->
         <div class="col-6">
+            <!--Map Box Gl JavaScript Render-->
+            <div id='map' style='width: 400px; height: 300px;'></div>
             <% if(currentUser) { %>
             <h2>Leave a Review:</h2>
             <form action="/campgrounds/<%=campground._id%>/reviews" class="mb-3 validated-form" method="POST"
@@ -115,3 +117,11 @@
             <% } %>
         </div>
     </div>
+
+    <!-- Map Token and Marker info for campground-->
+    <script>
+        const mapToken = '<%-process.env.MAPBOX_TOKEN %>';
+        const campground = <%-JSON.stringify(campground)%>;
+    </script>
+    <!-- ShowPage Js for Map -->
+    <script src="/js/showPageMap.js"></script>

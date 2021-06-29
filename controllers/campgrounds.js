@@ -1,12 +1,11 @@
-//Clodinary SDK required
-const { cloudinary } = require('../cloudinary/index.js');
-
 //Mapbox SDK (Gercoding forward)
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 //Mapbox token and Configuring MapBox
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geoCoder = mbxGeocoding({ accessToken: mapBoxToken });
 
+//Clodinary SDK required
+const { cloudinary } = require('../cloudinary/index.js');
 
 //Model related to the Route
 const Campground = require('../models/campground.js');
@@ -42,7 +41,6 @@ module.exports.createCampground = async (req, res, next) => {
     campground.images = req.files.map(file => ({url: file.path, filename: file.filename}));
     //add author or user to the instace
     campground.author = req.user._id
-    console.log(campground);
     await campground.save();
     //Adding flash message to req
     req.flash('success', 'Successfully made a new campground');
