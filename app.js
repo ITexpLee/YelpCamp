@@ -2,10 +2,12 @@
 if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
+
 //Require all the important dependencies at the top
 const express = require('express');
 const app = express();
 const path = require('path');
+const mongoose = require('mongoose'); //requiring mongoose for database manipulation
 const ejsMate = require('ejs-mate'); //changing default engine to ejs-mate from ejs
 const methodOverride = require('method-override');
 const ExpressError = require('./utilities/expressError'); //Error related dependencies user + module
@@ -19,11 +21,50 @@ const flash = require('connect-flash');
 const passport = require('passport'); //requiring passport for easier authentication
 const LocalStratergy = require('passport-local'); //passport stratergy for local signup and login
 
+//Mongo Connect to connect our session to Mongo rather than Memory (It is used to connect session to online Atlas DB)
+const MongoStore = require('connect-mongo');
+
+//Our Atlas connection url or localhost
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
+
+//Connecting to mongoose and mongoDB
+mongoose.connect(dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+})
+//Create a db variable as we will be calling the connection multiple times
+const db = mongoose.connection;
+db.then(() => {
+        console.log("Database Connecteed");
+    })
+    .catch(err => {
+        console.log("OHH Noo Mongo Connection Error!");
+        console.log(err);
+    });
+
+//Passing on our Secret or production
+const secret = process.env.SECRET || 'weshouldhaveabetterstorage';
+
+//Creating Session storage location from mongo connect
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 3600,
+    crypto: {
+        secret: secret
+    }
+});
+store.on('error', function (e) {
+    console.log("Session Store Error", e)
+});
+
 //Middleware related to cookies and session (Memory packages)
 //As session cookie is defined on the app.js it can be accessed through any route(global cookie) 
 const sessionConfig = {
+    store: store,
     name: '_fj',
-    secret: 'weshouldhaveabetterstorage',
+    secret: secret,
     resave: false, //If there is change in one session variable does it make any change in other (change in onetab no change in other)
     saveUninitialized: true,
     cookie: {
@@ -70,27 +111,6 @@ app.use((req, res, next) => {
 const registerRoutes = require('./routes/users.js');
 const campgroundRoutes = require('./routes/campgrounds.js');
 const reviewRoutes = require('./routes/reviews.js');
-
-//Connecting to mongoose and mongoDB
-const mongoose = require('mongoose');
-const {
-    string
-} = require('joi');
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-})
-//Create a db variable as we will be calling the connection multiple times
-const db = mongoose.connection;
-db.then(() => {
-        console.log("Database Connecteed");
-    })
-    .catch(err => {
-        console.log("OHH Noo Mongo Connection Error!");
-        console.log(err);
-    });
 
 //Setting up the view engine and it's directory
 app.engine('ejs', ejsMate);
