@@ -2,6 +2,14 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const mongoose = require('mongoose');
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
+//Atlas URL
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
 
 //Developer created Model and dependencies
 const Campground = require('./../models/campground.js');
@@ -12,8 +20,7 @@ const {
 } = require('./seedHelpers.js');
 
 //Connecting to mongoose and mongoDB
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
@@ -39,7 +46,7 @@ const seedDB = async () => {
     let rand = Math.floor(Math.random() * 1000 + 1);
     let price = Math.floor(Math.random() * 20) + 10;
     const camp = new Campground({
-      author: '60d6e2a874fd5e3a90fc14a1',
+      author: '60dc5f3d00e3bb1dd02c2417',
       location: `${cities[rand].city}, ${cities[rand].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       images: [{
