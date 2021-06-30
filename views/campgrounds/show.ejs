@@ -62,7 +62,7 @@
         <!--Review Section of Page-->
         <div class="col-6">
             <!--Map Box Gl JavaScript Render-->
-            <div id='map' style='width: 400px; height: 300px;'></div>
+            <div id='map'></div>
             <% if(currentUser) { %>
             <h2>Leave a Review:</h2>
             <form action="/campgrounds/<%=campground._id%>/reviews" class="mb-3 validated-form" method="POST"

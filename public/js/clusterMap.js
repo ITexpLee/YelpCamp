@@ -1,15 +1,14 @@
 mapboxgl.accessToken = mapToken;
 const map = new mapboxgl.Map({
-    container: 'map',
+    container: 'cluster-map',
     style: 'mapbox://styles/mapbox/dark-v10',
     center: [-103.59179687498357, 40.66995747013945],
     zoom: 3,
     pitch: 20
 })
 
-//Adding Navigation controls to the  map/marker edits
+//Adding Navigation controls to the map
 map.addControl(new mapboxgl.NavigationControl());
-
 
 //User location and Mapbox gl attributes
 // map.addControl(new mapboxgl.GeolocateControl({

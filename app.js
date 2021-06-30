@@ -10,6 +10,8 @@ const ejsMate = require('ejs-mate'); //changing default engine to ejs-mate from 
 const methodOverride = require('method-override');
 const ExpressError = require('./utilities/expressError'); //Error related dependencies user + module
 const User = require('./models/user.js'); //requiring passport model
+const mongoSanitize = require('express-mongo-sanitize'); //Sanitize mongo incoming query
+const helmet = require('helmet'); //11 middlewares for security
 
 //Cookies, Session, passport and flash package (All Register/Signup stuff)
 const session = require('express-session');
@@ -20,11 +22,14 @@ const LocalStratergy = require('passport-local'); //passport stratergy for local
 //Middleware related to cookies and session (Memory packages)
 //As session cookie is defined on the app.js it can be accessed through any route(global cookie) 
 const sessionConfig = {
+    name: '_fj',
     secret: 'weshouldhaveabetterstorage',
     resave: false, //If there is change in one session variable does it make any change in other (change in onetab no change in other)
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        //for https server
+        // secure: true,
         //1000 milliseconds in a sec * 60 sec in a min * 60 mins in an hour * 24 hours in a day * 7 days a week
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
@@ -98,6 +103,59 @@ app.use(express.urlencoded({
 })); //req.body is parsed as a form
 app.use(methodOverride('_method')); //Setting the query for method-override
 app.use(express.static(path.join(__dirname, 'public')));
+//Middleware to sanitize all incoming query (mongo injection safety)
+app.use(mongoSanitize({
+    //replace $ or . with '_' for safety
+    replaceWith: '_'
+}));
+
+//Helment middleware to apply security to your app //all 11 woorking helmet middleware
+//Content security policy all websites allowed defined for helment
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://api.mapbox.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net"
+];
+const styleSrcUrls = [
+    "https://kit-free.fontawesome.com/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.mapbox.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+    "https://cdn.jsdelivr.net"
+];
+const connectSrcUrls = [
+    "https://api.mapbox.com/",
+    "https://a.tiles.mapbox.com/",
+    "https://b.tiles.mapbox.com/",
+    "https://events.mapbox.com/",
+];
+const fontSrcUrls = [];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/manali-camp/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://images.unsplash.com/",
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
+
 
 //Setting up all routes (CRUD protocol)
 app.get('/', (req, res) => {

@@ -2,52 +2,60 @@
     <% layout('layouts/boilerplate.ejs')%>
     <!--Bootstrap 5 form-->
     <div class="row">
-        <h1 class="text-center">New Campground</h1>
-        <div class="col-6 offset-3">
-            <!--All the data in form is passed as an object which is an array called campground-->
-            <!--Validated form class is selected by Bootstrap 5 JavaScript code by query selector for validation-->
-            <form action="/campgrounds" method="POST" class="validated-form" enctype="multipart/form-data" novalidate>
-                <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" name="campground[title]" required>
-                    <div class="valid-feedback">
-                        looks good!
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="location" class="form-label">Location</label>
-                    <input type="text" class="form-control" id="location" name="campground[location]" required>
-                    <div class="valid-feedback">
-                        looks good!
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="price" class="form-label">Campground Price</label>
-                    <div class="input-group">
-                        <span class="input-group-text" id="price-label">$</span>
-                        <input type="text" class="form-control" id="price" aria-label="Amount" name="campground[price]"
-                            placeholder="0.00" aria-describedby="price-label" required>
-                        <div class="valid-feedback">
-                            looks good!
+        <h1 class="text-center"><strong>New Campground</strong></h1>
+        <div class="col-md-6 offset-md-3">
+            <!--Converting the new campground page in card-->
+            <div class="card shadow mb-5">
+                <div class="card-body">
+                    <!--All the data in form is passed as an object which is an array called campground-->
+                    <!--Validated form class is selected by Bootstrap 5 JavaScript code by query selector for validation-->
+                    <form action="/campgrounds" method="POST" class="validated-form" enctype="multipart/form-data"
+                        novalidate>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="campground[title]" required>
+                            <div class="valid-feedback">
+                                looks good!
+                            </div>
                         </div>
-                    </div>
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" name="campground[location]" required>
+                            <div class="valid-feedback">
+                                looks good!
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Campground Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="price-label">$</span>
+                                <input type="text" class="form-control" id="price" aria-label="Amount"
+                                    name="campground[price]" placeholder="0.00" aria-describedby="price-label" required>
+                                <div class="valid-feedback">
+                                    looks good!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="campground[description]"
+                                required></textarea>
+                            <div class="valid-feedback">
+                                looks good!
+                            </div>
+                        </div>
+                        <!--This part of form isn't passed with other inputs-->
+                        <!--It is passed to upload middleware of multer and added to req.files-->
+                        <div class="mb-3">
+                            <label for="image" class="form-label"></label>
+                            <input class="form-control" type="file" name="image" id="imageSelector" multiple required>
+                        </div>
+                        <div class="mb-3 text-center">
+                            <button class="btn btn-success" type="submit">Add Campground</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" name="campground[description]" required></textarea>
-                    <div class="valid-feedback">
-                        looks good!
-                    </div>
-                </div>
-                <!--This part of form isn't passed with other inputs-->
-                <!--It is passed to upload middleware of multer and added to req.files-->
-                <div class="mb-3">
-                    <label for="image" class="form-label"></label>
-                    <input class="form-control" type="file" name="image" id="imageSelector" multiple required>
-                </div>
-                <div class="mb-3">
-                    <button class="btn btn-success" type="submit">Add Campground</button>
-                </div>
-            </form>
+            </div>
+
         </div>
     </div>
