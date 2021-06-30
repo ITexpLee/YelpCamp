@@ -16,6 +16,13 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200,h_200');
 });
 
+// to allow virtuals be passed when converted to Json
+const opts = {
+    toJSON: {
+        virtuals: true
+    }
+};
+
 //Creating our Campground Model
 const campgroundSchema = new Schema({
     title: {
@@ -50,6 +57,15 @@ const campgroundSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Review'
     }]
+}, opts);
+
+//Adding Virtual in CampgroundSchema for Map Box clusters
+campgroundSchema.virtual('properties.popUpMarkup').get(function () {
+    return `
+    <strong>
+    <a href='/campgrounds/${this.id}'>${this.title}</a>
+    </strong>
+    <p>${this.description.substring(0, 20)}...</p>`;
 });
 
 //Adding mongoose middleware in order to delete all related reviews to the campground  
