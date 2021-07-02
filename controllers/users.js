@@ -14,14 +14,24 @@ module.exports.Register = async (req, res, next) => {
             email,
             password
         } = req.body;
+
         //Check if email already exists
         const checkEmail = await User.find({
             email: email
         });
-        if (checkEmail.length !== 0) {
+        if (checkEmail.length) {
             req.flash('error', 'Email already exists');
             return res.redirect('/register');
         };
+
+        //Check for password Validation
+        const regex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        const checkPassword = await (password.match(regex));
+        if (!checkPassword) {
+            req.flash('error', 'Your Password must contain min 8 letter password, with at least a symbol, upper and lower case letters and a number');
+            return res.redirect('/register');
+        }
+
         const user = await new User({
             username: username,
             email: email
