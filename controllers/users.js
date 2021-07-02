@@ -14,6 +14,14 @@ module.exports.Register = async (req, res, next) => {
             email,
             password
         } = req.body;
+        //Check if email already exists
+        const checkEmail = await User.find({
+            email: email
+        });
+        if (checkEmail.length !== 0) {
+            req.flash('error', 'Email already exists');
+            return res.redirect('/register');
+        };
         const user = await new User({
             username: username,
             email: email
@@ -53,7 +61,7 @@ module.exports.login = (req, res) => {
 }
 
 //Logout Route (Destroy Route)
-module.exports.logout =  (req, res) => {
+module.exports.logout = (req, res) => {
     //We get this method with passport
     req.logout();
     req.flash('success', 'Goodbye!');
