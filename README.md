@@ -32,7 +32,7 @@ A Node.js web application project from the Udemy course - <a href="https://www.u
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![yelpcamp](https://user-images.githubusercontent.com/55958223/127369728-6c996a75-4de6-4c21-b9e9-3c396b17c759.png)
 
 There are many great README templates available on GitHub, however, I didn't find one that really suit my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
 
