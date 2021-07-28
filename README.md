@@ -64,7 +64,7 @@ A list of commonly used resources that I find helpful are listed in the acknowle
 ### Clone or download this repository
 
   ```sh
-  git clone https://github.com/lucasweng/yelp-camp.git
+  git clone https://github.com/Anunay-Anand/YelpCamp.git
   ```
 
 ### Installation
