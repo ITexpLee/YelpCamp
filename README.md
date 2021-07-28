@@ -137,7 +137,7 @@ Contributions are what make the open source community such an amazing place to b
 
 Your Name - [Anunay Anand](https://www.linkedin.com/in/anunay-anand/) - anunayanand@gmail.com
 
-Project Link: [https://github.com/Anunay-Anand/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/Anunay-Anand/YelpCamp](https://github.com/Anunay-Anand/YelpCamp)
 
 
 
