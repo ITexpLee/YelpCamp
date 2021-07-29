@@ -137,7 +137,7 @@ Contributions are what make the open source community such an amazing place to b
 
 Your Name - [Anunay Anand](https://www.linkedin.com/in/anunay-anand/) - anunayanand@gmail.com
 
-Project Link: [https://github.com/Anunay-Anand/YelpCamp](https://github.com/Anunay-Anand/YelpCamp)
+Project Link: [https://github.com/Anunay-Anand/YelpCamp](http://cryptic-retreat-05843.herokuapp.com/)
 
 
 
@@ -145,12 +145,10 @@ Project Link: [https://github.com/Anunay-Anand/YelpCamp](https://github.com/Anun
 ## Acknowledgements
 * [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
 * [Img Shields](https://shields.io)
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Pages](https://pages.github.com)
+<!-- * [Choose an Open Source License](https://choosealicense.com)
 * [Animate.css](https://daneden.github.io/animate.css)
-* [Loaders.css](https://connoratherton.com/loaders)
+* [Loaders.css](https://connoratherton.com/loaders) -->
 * [Slick Carousel](https://kenwheeler.github.io/slick)
 * [Smooth Scroll](https://github.com/cferdinandi/smooth-scroll)
 * [Sticky Kit](http://leafo.net/sticky-kit)
-* [JVectorMap](http://jvectormap.com)
 * [Font Awesome](https://fontawesome.com)
